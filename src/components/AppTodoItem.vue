@@ -1,15 +1,39 @@
 <script lang="ts">
-import {defineComponent} from 'vue'
+import {defineComponent, PropType} from 'vue'
+import {ITodo} from "@/type/Todo";
 
 export default defineComponent({
-name: "AppTodoItem"
+  name: "AppTodoItem",
+  props: {
+    todo: {
+      type: Object as PropType<ITodo>,
+      required: true
+    },
+  },
+  methods: {
+    toggleTodo() {
+      this.$emit('toggleTodo', this.todo.id)
+    },
+
+    removeTodo() {
+      this.$emit('removeTodo', this.todo.id)
+    }
+  },
+  emits: {
+    toggleTodo: (id: number) => Number.isInteger(id),
+    removeTodo: (id: number) => Number.isInteger(id)
+  }
 })
 </script>
 
 <template>
-  $END$
+  <li class="todo-item" :class="{ 'todo-item--done': todo.completed }" @click="toggleTodo">
+    <div class="todo-item__status">
+      <i class="bi bi-check2"></i>
+    </div>
+    <span class="todo-item__text">{{ todo.text }}</span>
+    <button class="todo-item__remove-button" @click.stop="removeTodo">
+      <i class="bi bi-trash3"></i>
+    </button>
+  </li>
 </template>
-
-<style scoped>
-
-</style>
